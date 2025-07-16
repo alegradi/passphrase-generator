@@ -21,7 +21,16 @@ with open("data/verbs.txt", "r") as file:
 
 # Function definitions
 def generate_random_components():
+    """
+    Generate a list of random words from the wordlist.
 
+    Args:
+        None
+
+    Returns:
+        list:
+            generated_components: Random choice adverb, adjective, noun, verb
+    """
     # Read the word lists and choose random
     generated_components["adverb"] = random.choice(adverbs_list)
     generated_components["adjective"] = random.choice(adjectives_list)
@@ -35,7 +44,18 @@ def generate_random_components():
 
 
 def add_special_character(selected_words):
+    """
+    Add a random special character from a list to a random word from input
+    list.
 
+    Args:
+        selected_words: list of words to append to
+
+    Returns:
+        list:
+            selected_words: With a random word that has a random special
+            character appended.
+    """
     modifiable_options = list(selected_words.keys())
     what_to_modify = random.choice(modifiable_options)
     selected_words[what_to_modify] += random.choice(special_characters)
@@ -43,7 +63,16 @@ def add_special_character(selected_words):
 
 
 def capitalize_word(selected_words):
+    """
+    Capitalize a random word from a list of words
 
+    Args:
+        selected_words: list of words to choose from
+
+    Returns:
+        list:
+            selected_words: With a random word that has been capitalized.
+    """
     modifiable_options = list(selected_words.keys())
     what_to_modify = random.choice(modifiable_options)
     word_to_capitalize = selected_words[what_to_modify]
@@ -52,7 +81,16 @@ def capitalize_word(selected_words):
 
 
 def add_random_number(selected_words):
+    """
+    Add a random number from 0-9 to a a random word selected from input list.
 
+    Args:
+        selected_words: list of words to append to
+
+    Returns:
+        list:
+            selected_words: With a random word that has a number appended
+    """
     modifiable_options = list(selected_words.keys())
     what_to_modify = random.choice(modifiable_options)
     word_to_modify = selected_words[what_to_modify]
@@ -61,6 +99,15 @@ def add_random_number(selected_words):
 
 
 def generate_passphrase():
+    """
+    Generate a passphrase
+
+    Args:
+        None
+
+    Returns:
+        string - generated passphrase
+    """
 
     generate_random_components()
 
