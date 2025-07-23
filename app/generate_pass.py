@@ -6,16 +6,16 @@ special_characters = ["<", ">", "[", "]", "{", "}", "#", "£", "€", "%", "^", 
 
 
 # Create lists from files to use as the basis of passphrase generation
-with open("data/adverbs.txt", "r") as file:
+with open("app/data/adverbs.txt", "r") as file:
     adverbs_list = file.read().splitlines()
 
-with open("data/adjectives.txt", "r") as file:
+with open("app/data/adjectives.txt", "r") as file:
     adjectives_list = file.read().splitlines()
 
-with open("data/nouns.txt", "r") as file:
+with open("app/data/nouns.txt", "r") as file:
     nouns_list = file.read().splitlines()
 
-with open("data/verbs.txt", "r") as file:
+with open("app/data/verbs.txt", "r") as file:
     verb_list = file.read().splitlines()
 
 
@@ -116,7 +116,6 @@ def generate_passphrase():
     # Select random method to generate
     generation_method = random.randint(1, 3)
 
-    # 
     if generation_method == 1:
         del generated_components["adverb"]
 
@@ -151,6 +150,3 @@ def generate_passphrase():
         generated_passphrase += processed_generated_components['noun']
 
     return generated_passphrase
-
-
-print(generate_passphrase())
