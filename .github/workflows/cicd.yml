@@ -58,7 +58,6 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ github.actor }}/passphrase-generator
           tags: |
-            type=ref,event=branch
             type=ref,event=pr
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}
