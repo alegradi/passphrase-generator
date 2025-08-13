@@ -48,7 +48,7 @@ jobs:
       - name: Log in to Container Registry
         uses: docker/login-action@v3
         with:
-          registry: hub.docker.com
+          registry: registry-1.docker.io
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
@@ -56,7 +56,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          images: hub.docker.com/${{ github.actor }}/passphrase-generator
+          images: registry-1.docker.io/${{ github.actor }}/passphrase-generator
           tags: |
             type=ref,event=pr
             type=semver,pattern={{version}}
@@ -78,6 +78,6 @@ jobs:
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v1
         with:
-          subject-name: hub.docker.com/${{ env.IMAGE_NAME}}
+          subject-name: registry-1.docker.io/${{ env.IMAGE_NAME}}
           subject-digest: ${{ steps.build.outputs.digest }}
           push-to-registry: true
