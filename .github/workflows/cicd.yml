@@ -51,6 +51,8 @@ jobs:
           registry: registry-1.docker.io
           username: ${{ github.actor }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
+        env:
+          DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Extract metadata
         id: meta
