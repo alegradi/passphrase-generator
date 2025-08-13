@@ -1,0 +1,97 @@
+name: Manual Docker Build and Push
+
+on:
+  push:
+    branches: [ master, testing ]
+  pull_request:
+    branches: [ master ]
+  workflow_dispatch:
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up environment variables
+      run: |
+        echo "IMAGE_NAME=alegradi/passphrase-generator" >> $GITHUB_ENV
+        echo "IMAGE_TAG=latest" >> $GITHUB_ENV
+        echo "BUILD_DATE=$(date -u +'%Y-%m-%dT%H:%M:%SZ')" >> $GITHUB_ENV
+        echo "GIT_SHA=${GITHUB_SHA::8}" >> $GITHUB_ENV
+
+    - name: Print build information
+      run: |
+        echo "Building Docker image:"
+        echo "  Image: $IMAGE_NAME:$IMAGE_TAG"
+        echo "  Build date: $BUILD_DATE"
+        echo "  Git SHA: $GIT_SHA"
+        echo "  Runner: $(uname -a)"
+        echo "  Docker version: $(docker --version)"
+
+    - name: Login to Docker Hub manually
+      run: |
+        echo "Logging into Docker Hub..."
+        echo "$DOCKER_TOKEN" | docker login --username "$DOCKER_USERNAME" --password-stdin
+        echo "Docker Hub login successful"
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+
+    - name: Build Docker image manually
+      run: |
+        echo "Building Docker image..."
+        docker build \
+          --tag "$IMAGE_NAME:$IMAGE_TAG" \
+          --tag "$IMAGE_NAME:$GIT_SHA" \
+          --label "org.opencontainers.image.source=https://github.com/${{ github.repository }}" \
+          --label "org.opencontainers.image.created=$BUILD_DATE" \
+          --label "org.opencontainers.image.revision=$GITHUB_SHA" \
+          --label "org.opencontainers.image.version=$GIT_SHA" \
+          .
+        echo "Docker build completed"
+
+    - name: Inspect built image
+      run: |
+        echo "Image details:"
+        docker images "$IMAGE_NAME" --format "table {{.Repository}}\t{{.Tag}}\t{{.Size}}\t{{.CreatedAt}}"
+        echo ""
+        echo "Image layers:"
+        docker history "$IMAGE_NAME:$IMAGE_TAG" --no-trunc
+
+    - name: Test the built image (optional)
+      run: |
+        echo "Testing the built image..."
+        # Example: Run a quick test of your application
+        docker run --rm "$IMAGE_NAME:$IMAGE_TAG" --help || echo "No --help flag available"
+        echo "Basic image test completed"
+
+    - name: Push image to Docker Hub manually
+      run: |
+        echo "Pushing Docker image to Docker Hub..."
+        docker push "$IMAGE_NAME:$IMAGE_TAG"
+        docker push "$IMAGE_NAME:$GIT_SHA"
+        echo "Docker push completed successfully"
+
+    - name: Clean up local images
+      run: |
+        echo "Cleaning up local Docker images..."
+        docker rmi "$IMAGE_NAME:$IMAGE_TAG" "$IMAGE_NAME:$GIT_SHA" || true
+        docker system prune -f
+        echo "Cleanup completed"
+
+    - name: Logout from Docker Hub
+      if: always()
+      run: |
+        docker logout
+        echo "Docker logout completed"
+
+    - name: Build summary
+      run: |
+        echo "Build and push completed successfully!"
+        echo "Pushed images:"
+        echo " - $IMAGE_NAME:$IMAGE_TAG"
+        echo " - $IMAGE_NAME:$GIT_SHA"
+        echo "Docker Hub: https://hub.docker.com/r/$IMAGE_NAME"
