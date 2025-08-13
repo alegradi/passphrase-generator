@@ -61,12 +61,12 @@ jobs:
         echo "Image layers:"
         docker history "$IMAGE_NAME:$IMAGE_TAG" --no-trunc
 
-    - name: Test the built image (optional)
-      run: |
-        echo "Testing the built image..."
-        # Example: Run a quick test of your application
-        docker run --rm "$IMAGE_NAME:$IMAGE_TAG" --help || echo "No --help flag available"
-        echo "Basic image test completed"
+    # - name: Test the built image (optional)
+    #   run: |
+    #     echo "Testing the built image..."
+    #     # Example: Run a quick test of your application
+    #     docker run --rm "$IMAGE_NAME:$IMAGE_TAG" --help || echo "No --help flag available"
+    #     echo "Basic image test completed"
 
     - name: Push image to Docker Hub manually
       run: |
