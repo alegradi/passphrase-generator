@@ -34,11 +34,11 @@ jobs:
     - name: Login to Docker Hub manually
       run: |
         echo "Logging into Docker Hub..."
-        echo "$DOCKER_TOKEN" | docker login --username "$DOCKER_USERNAME" --password-stdin
+        echo "$DOCKERHUB_TOKEN" | docker login --username "$DOCKER_USERNAME" --password-stdin
         echo "Docker Hub login successful"
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_TOKEN: ${{ secrets.DOCKER_TOKEN }}
+        DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build Docker image manually
       run: |
