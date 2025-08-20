@@ -11,7 +11,7 @@ docker build -t <yourname>/passphrase-generator:1.0 .
 
 2. Run it locally
 ```
-docker run -d --rm --name pass-test -p 8080:5000  <yourname>/passphrase-generator:1.0
+docker run -d --rm --name pass-test -p 8080:80  <yourname>/passphrase-generator:1.0
 ```
 
 3. Test
